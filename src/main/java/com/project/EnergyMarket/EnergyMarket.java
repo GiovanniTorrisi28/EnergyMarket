@@ -1,0 +1,381 @@
+package com.project.EnergyMarket;
+
+import io.reactivex.Flowable;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.web3j.abi.EventEncoder;
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Event;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.RemoteFunctionCall;
+import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.response.BaseEventResponse;
+import org.web3j.protocol.core.methods.response.Log;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.tx.Contract;
+import org.web3j.tx.TransactionManager;
+import org.web3j.tx.gas.ContractGasProvider;
+
+/**
+ * <p>Auto generated code.
+ * <p><strong>Do not modify!</strong>
+ * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * <a href="https://github.com/hyperledger-web3j/web3j/tree/main/codegen">codegen module</a> to update.
+ *
+ * <p>Generated with web3j version 1.6.2.
+ */
+@SuppressWarnings("rawtypes")
+public class EnergyMarket extends Contract {
+    public static final String BINARY = "608060405234801561000f575f80fd5b50604051611614380380611614833981810160405281019061003191906100d4565b805f806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550506100ff565b5f80fd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6100a38261007a565b9050919050565b6100b381610099565b81146100bd575f80fd5b50565b5f815190506100ce816100aa565b92915050565b5f602082840312156100e9576100e8610076565b5b5f6100f6848285016100c0565b91505092915050565b6115088061010c5f395ff3fe60806040526004361061006f575f3560e01c806336fd7e1b1161004d57806336fd7e1b146100eb5780634d3820eb14610107578063774ec6441461011d5780637e16aa94146101455761006f565b80630b6d83e2146100735780631bbfae0e1461009b578063298d65a1146100c3575b5f80fd5b34801561007e575f80fd5b5061009960048036038101906100949190610d8a565b610181565b005b3480156100a6575f80fd5b506100c160048036038101906100bc9190610d8a565b610328565b005b3480156100ce575f80fd5b506100e960048036038101906100e49190610d8a565b610495565b005b61010560048036038101906101009190610e0f565b610715565b005b348015610112575f80fd5b5061011b610aca565b005b348015610128575f80fd5b50610143600480360381019061013e9190610d8a565b610c38565b005b348015610150575f80fd5b5061016b60048036038101906101669190610e4d565b610d0b565b6040516101789190610e87565b60405180910390f35b60015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f206001015f9054906101000a900460ff1661020d576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161020490610efa565b60405180910390fd5b5f805f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166340c10f1933846040518363ffffffff1660e01b8152600401610269929190610f27565b6020604051808303815f875af1158015610285573d5f803e3d5ffd5b505050506040513d601f19601f820116820180604052508101906102a99190610f83565b9050806102eb576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016102e290610ff8565b60405180910390fd5b7f8837e93703fb5c8f36143e5f52f7d32d649f3e0742d62e216518bba4cf44f78a338360405161031c929190610f27565b60405180910390a15050565b60015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f206001015f9054906101000a900460ff166104925760405180604001604052808281526020016001151581525060015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f205f820151815f01556020820151816001015f6101000a81548160ff021916908315150217905550905050600233908060018154018082558091505060019003905f5260205f20015f9091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055507fe29d35093005f4d575e1003753426b57a7f64378ba73332eef9c6ccc2b8decd63382604051610489929190610f27565b60405180910390a15b50565b60015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f206001015f9054906101000a900460ff16610521576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161051890610efa565b60405180910390fd5b805f8054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166370a08231336040518263ffffffff1660e01b815260040161057a9190611016565b602060405180830381865afa158015610595573d5f803e3d5ffd5b505050506040513d601f19601f820116820180604052508101906105b99190611043565b10156105fa576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016105f1906110de565b60405180910390fd5b5f805f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16639dc29fac33846040518363ffffffff1660e01b8152600401610656929190610f27565b6020604051808303815f875af1158015610672573d5f803e3d5ffd5b505050506040513d601f19601f820116820180604052508101906106969190610f83565b9050806106d8576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016106cf90611146565b60405180910390fd5b7f4cecac5779c514d9ace203777c2b9e1ca243798a762c18c1eb10326cfdef9a663383604051610709929190610f27565b60405180910390a15050565b60015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f206001015f9054906101000a900460ff166107a1576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161079890610efa565b60405180910390fd5b5f8160015f8573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f205f01546107ed9190611191565b905080341015610832576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016108299061121c565b60405180910390fd5b815f8054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166370a08231856040518263ffffffff1660e01b815260040161088b9190611016565b602060405180830381865afa1580156108a6573d5f803e3d5ffd5b505050506040513d601f19601f820116820180604052508101906108ca9190611043565b101561090b576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610902906112aa565b60405180910390fd5b5f805f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166323b872dd8533866040518463ffffffff1660e01b8152600401610969939291906112c8565b6020604051808303815f875af1158015610985573d5f803e3d5ffd5b505050506040513d601f19601f820116820180604052508101906109a99190610f83565b9050806109eb576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016109e290611347565b60405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff166108fc8390811502906040515f60405180830381858888f19350505050158015610a2e573d5f803e3d5ffd5b5081341115610a87573373ffffffffffffffffffffffffffffffffffffffff166108fc8334610a5d9190611365565b90811502906040515f60405180830381858888f19350505050158015610a85573d5f803e3d5ffd5b505b7f1cbe81348d01d294ac68391c5ba74e03143dc0a19a85ee2dfb5adeca547fc5e233858585604051610abc9493929190611398565b60405180910390a150505050565b60015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f206001015f9054906101000a900460ff16610c36576040518060400160405280600181526020016001151581525060015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f205f820151815f01556020820151816001015f6101000a81548160ff021916908315150217905550905050600233908060018154018082558091505060019003905f5260205f20015f9091909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055507fe29d35093005f4d575e1003753426b57a7f64378ba73332eef9c6ccc2b8decd6336001604051610c2d92919061141d565b60405180910390a15b565b60015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f206001015f9054906101000a900460ff16610cc4576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610cbb906114b4565b60405180910390fd5b8060015f3373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f205f018190555050565b5f60015f8373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f205f01549050919050565b5f80fd5b5f819050919050565b610d6981610d57565b8114610d73575f80fd5b50565b5f81359050610d8481610d60565b92915050565b5f60208284031215610d9f57610d9e610d53565b5b5f610dac84828501610d76565b91505092915050565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f610dde82610db5565b9050919050565b610dee81610dd4565b8114610df8575f80fd5b50565b5f81359050610e0981610de5565b92915050565b5f8060408385031215610e2557610e24610d53565b5b5f610e3285828601610dfb565b9250506020610e4385828601610d76565b9150509250929050565b5f60208284031215610e6257610e61610d53565b5b5f610e6f84828501610dfb565b91505092915050565b610e8181610d57565b82525050565b5f602082019050610e9a5f830184610e78565b92915050565b5f82825260208201905092915050565b7f4c277574656e7465206e6f6e2065207265676973747261746f000000000000005f82015250565b5f610ee4601983610ea0565b9150610eef82610eb0565b602082019050919050565b5f6020820190508181035f830152610f1181610ed8565b9050919050565b610f2181610dd4565b82525050565b5f604082019050610f3a5f830185610f18565b610f476020830184610e78565b9392505050565b5f8115159050919050565b610f6281610f4e565b8114610f6c575f80fd5b50565b5f81519050610f7d81610f59565b92915050565b5f60208284031215610f9857610f97610d53565b5b5f610fa584828501610f6f565b91505092915050565b7f50726f64757a696f6e6520646920656e65726769612066616c6c6974610000005f82015250565b5f610fe2601d83610ea0565b9150610fed82610fae565b602082019050919050565b5f6020820190508181035f83015261100f81610fd6565b9050919050565b5f6020820190506110295f830184610f18565b92915050565b5f8151905061103d81610d60565b92915050565b5f6020828403121561105857611057610d53565b5b5f6110658482850161102f565b91505092915050565b7f456e657267696120696e73756666696369656e74652070657220696c20636f6e5f8201527f73756d6f00000000000000000000000000000000000000000000000000000000602082015250565b5f6110c8602483610ea0565b91506110d38261106e565b604082019050919050565b5f6020820190508181035f8301526110f5816110bc565b9050919050565b7f436f6e73756d6f20646920656e65726769612066616c6c69746f0000000000005f82015250565b5f611130601a83610ea0565b915061113b826110fc565b602082019050919050565b5f6020820190508181035f83015261115d81611124565b9050919050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b5f61119b82610d57565b91506111a683610d57565b92508282026111b481610d57565b915082820484148315176111cb576111ca611164565b5b5092915050565b7f466f6e64692045544820696e73756666696369656e74690000000000000000005f82015250565b5f611206601783610ea0565b9150611211826111d2565b602082019050919050565b5f6020820190508181035f830152611233816111fa565b9050919050565b7f546f6b656e20696e73756666696369656e74692064616c2070726f647574746f5f8201527f7265000000000000000000000000000000000000000000000000000000000000602082015250565b5f611294602283610ea0565b915061129f8261123a565b604082019050919050565b5f6020820190508181035f8301526112c181611288565b9050919050565b5f6060820190506112db5f830186610f18565b6112e86020830185610f18565b6112f56040830184610e78565b949350505050565b7f54726173666572696d656e746f20746f6b656e2066616c6c69746f00000000005f82015250565b5f611331601b83610ea0565b915061133c826112fd565b602082019050919050565b5f6020820190508181035f83015261135e81611325565b9050919050565b5f61136f82610d57565b915061137a83610d57565b925082820390508181111561139257611391611164565b5b92915050565b5f6080820190506113ab5f830187610f18565b6113b86020830186610f18565b6113c56040830185610e78565b6113d26060830184610e78565b95945050505050565b5f819050919050565b5f819050919050565b5f6114076114026113fd846113db565b6113e4565b610d57565b9050919050565b611417816113ed565b82525050565b5f6040820190506114305f830185610f18565b61143d602083018461140e565b9392505050565b7f4c277574656e746520737065636966696361746f206e6f6e20652072656769735f8201527f747261746f000000000000000000000000000000000000000000000000000000602082015250565b5f61149e602583610ea0565b91506114a982611444565b604082019050919050565b5f6020820190508181035f8301526114cb81611492565b905091905056fea2646970667358221220103d91bf4634006b1ee6fd79dbd74112b36eb33d5f372b580660cf3f913d4a0064736f6c634300081a0033";
+
+    private static String librariesLinkedBinary;
+
+    public static final String FUNC_BUYENERGY = "buyEnergy";
+
+    public static final String FUNC_CONSUMEENERGY = "consumeEnergy";
+
+    public static final String FUNC_GETUSERPRICE = "getUserPrice";
+
+    public static final String FUNC_PRODUCEENERGY = "produceEnergy";
+
+    public static final String FUNC_registerUser = "registerUser";
+
+    public static final String FUNC_SETUSERPRICE = "setUserPrice";
+
+    public static final Event ENERGYCONSUMED_EVENT = new Event("EnergyConsumed", 
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Uint256>() {}));
+    ;
+
+    public static final Event ENERGYPRODUCED_EVENT = new Event("EnergyProduced", 
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Uint256>() {}));
+    ;
+
+    public static final Event ENERGYPURCHASED_EVENT = new Event("EnergyPurchased", 
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}, new TypeReference<Uint256>() {}, new TypeReference<Uint256>() {}));
+    ;
+
+    public static final Event USERREGISTERED_EVENT = new Event("UserRegistered", 
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Uint256>() {}));
+    ;
+
+    @Deprecated
+    protected EnergyMarket(String contractAddress, Web3j web3j, Credentials credentials,
+            BigInteger gasPrice, BigInteger gasLimit) {
+        super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
+    }
+
+    protected EnergyMarket(String contractAddress, Web3j web3j, Credentials credentials,
+            ContractGasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
+    }
+
+    @Deprecated
+    protected EnergyMarket(String contractAddress, Web3j web3j,
+            TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    }
+
+    protected EnergyMarket(String contractAddress, Web3j web3j,
+            TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
+    }
+
+    public static List<EnergyConsumedEventResponse> getEnergyConsumedEvents(
+            TransactionReceipt transactionReceipt) {
+        List<Contract.EventValuesWithLog> valueList = staticExtractEventParametersWithLog(ENERGYCONSUMED_EVENT, transactionReceipt);
+        ArrayList<EnergyConsumedEventResponse> responses = new ArrayList<EnergyConsumedEventResponse>(valueList.size());
+        for (Contract.EventValuesWithLog eventValues : valueList) {
+            EnergyConsumedEventResponse typedResponse = new EnergyConsumedEventResponse();
+            typedResponse.log = eventValues.getLog();
+            typedResponse.consumer = (String) eventValues.getNonIndexedValues().get(0).getValue();
+            typedResponse.amount = (BigInteger) eventValues.getNonIndexedValues().get(1).getValue();
+            responses.add(typedResponse);
+        }
+        return responses;
+    }
+
+    public static EnergyConsumedEventResponse getEnergyConsumedEventFromLog(Log log) {
+        Contract.EventValuesWithLog eventValues = staticExtractEventParametersWithLog(ENERGYCONSUMED_EVENT, log);
+        EnergyConsumedEventResponse typedResponse = new EnergyConsumedEventResponse();
+        typedResponse.log = log;
+        typedResponse.consumer = (String) eventValues.getNonIndexedValues().get(0).getValue();
+        typedResponse.amount = (BigInteger) eventValues.getNonIndexedValues().get(1).getValue();
+        return typedResponse;
+    }
+
+    public Flowable<EnergyConsumedEventResponse> energyConsumedEventFlowable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(log -> getEnergyConsumedEventFromLog(log));
+    }
+
+    public Flowable<EnergyConsumedEventResponse> energyConsumedEventFlowable(
+            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
+        filter.addSingleTopic(EventEncoder.encode(ENERGYCONSUMED_EVENT));
+        return energyConsumedEventFlowable(filter);
+    }
+
+    public static List<EnergyProducedEventResponse> getEnergyProducedEvents(
+            TransactionReceipt transactionReceipt) {
+        List<Contract.EventValuesWithLog> valueList = staticExtractEventParametersWithLog(ENERGYPRODUCED_EVENT, transactionReceipt);
+        ArrayList<EnergyProducedEventResponse> responses = new ArrayList<EnergyProducedEventResponse>(valueList.size());
+        for (Contract.EventValuesWithLog eventValues : valueList) {
+            EnergyProducedEventResponse typedResponse = new EnergyProducedEventResponse();
+            typedResponse.log = eventValues.getLog();
+            typedResponse.producer = (String) eventValues.getNonIndexedValues().get(0).getValue();
+            typedResponse.amount = (BigInteger) eventValues.getNonIndexedValues().get(1).getValue();
+            responses.add(typedResponse);
+        }
+        return responses;
+    }
+
+    public static EnergyProducedEventResponse getEnergyProducedEventFromLog(Log log) {
+        Contract.EventValuesWithLog eventValues = staticExtractEventParametersWithLog(ENERGYPRODUCED_EVENT, log);
+        EnergyProducedEventResponse typedResponse = new EnergyProducedEventResponse();
+        typedResponse.log = log;
+        typedResponse.producer = (String) eventValues.getNonIndexedValues().get(0).getValue();
+        typedResponse.amount = (BigInteger) eventValues.getNonIndexedValues().get(1).getValue();
+        return typedResponse;
+    }
+
+    public Flowable<EnergyProducedEventResponse> energyProducedEventFlowable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(log -> getEnergyProducedEventFromLog(log));
+    }
+
+    public Flowable<EnergyProducedEventResponse> energyProducedEventFlowable(
+            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
+        filter.addSingleTopic(EventEncoder.encode(ENERGYPRODUCED_EVENT));
+        return energyProducedEventFlowable(filter);
+    }
+
+    public static List<EnergyPurchasedEventResponse> getEnergyPurchasedEvents(
+            TransactionReceipt transactionReceipt) {
+        List<Contract.EventValuesWithLog> valueList = staticExtractEventParametersWithLog(ENERGYPURCHASED_EVENT, transactionReceipt);
+        ArrayList<EnergyPurchasedEventResponse> responses = new ArrayList<EnergyPurchasedEventResponse>(valueList.size());
+        for (Contract.EventValuesWithLog eventValues : valueList) {
+            EnergyPurchasedEventResponse typedResponse = new EnergyPurchasedEventResponse();
+            typedResponse.log = eventValues.getLog();
+            typedResponse.consumer = (String) eventValues.getNonIndexedValues().get(0).getValue();
+            typedResponse.producer = (String) eventValues.getNonIndexedValues().get(1).getValue();
+            typedResponse.amount = (BigInteger) eventValues.getNonIndexedValues().get(2).getValue();
+            typedResponse.totalPrice = (BigInteger) eventValues.getNonIndexedValues().get(3).getValue();
+            responses.add(typedResponse);
+        }
+        return responses;
+    }
+
+    public static EnergyPurchasedEventResponse getEnergyPurchasedEventFromLog(Log log) {
+        Contract.EventValuesWithLog eventValues = staticExtractEventParametersWithLog(ENERGYPURCHASED_EVENT, log);
+        EnergyPurchasedEventResponse typedResponse = new EnergyPurchasedEventResponse();
+        typedResponse.log = log;
+        typedResponse.consumer = (String) eventValues.getNonIndexedValues().get(0).getValue();
+        typedResponse.producer = (String) eventValues.getNonIndexedValues().get(1).getValue();
+        typedResponse.amount = (BigInteger) eventValues.getNonIndexedValues().get(2).getValue();
+        typedResponse.totalPrice = (BigInteger) eventValues.getNonIndexedValues().get(3).getValue();
+        return typedResponse;
+    }
+
+    public Flowable<EnergyPurchasedEventResponse> energyPurchasedEventFlowable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(log -> getEnergyPurchasedEventFromLog(log));
+    }
+
+    public Flowable<EnergyPurchasedEventResponse> energyPurchasedEventFlowable(
+            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
+        filter.addSingleTopic(EventEncoder.encode(ENERGYPURCHASED_EVENT));
+        return energyPurchasedEventFlowable(filter);
+    }
+
+    public static List<UserRegisteredEventResponse> getUserRegisteredEvents(
+            TransactionReceipt transactionReceipt) {
+        List<Contract.EventValuesWithLog> valueList = staticExtractEventParametersWithLog(USERREGISTERED_EVENT, transactionReceipt);
+        ArrayList<UserRegisteredEventResponse> responses = new ArrayList<UserRegisteredEventResponse>(valueList.size());
+        for (Contract.EventValuesWithLog eventValues : valueList) {
+            UserRegisteredEventResponse typedResponse = new UserRegisteredEventResponse();
+            typedResponse.log = eventValues.getLog();
+            typedResponse.user = (String) eventValues.getNonIndexedValues().get(0).getValue();
+            typedResponse.pricePerToken = (BigInteger) eventValues.getNonIndexedValues().get(1).getValue();
+            responses.add(typedResponse);
+        }
+        return responses;
+    }
+
+    public static UserRegisteredEventResponse getUserRegisteredEventFromLog(Log log) {
+        Contract.EventValuesWithLog eventValues = staticExtractEventParametersWithLog(USERREGISTERED_EVENT, log);
+        UserRegisteredEventResponse typedResponse = new UserRegisteredEventResponse();
+        typedResponse.log = log;
+        typedResponse.user = (String) eventValues.getNonIndexedValues().get(0).getValue();
+        typedResponse.pricePerToken = (BigInteger) eventValues.getNonIndexedValues().get(1).getValue();
+        return typedResponse;
+    }
+
+    public Flowable<UserRegisteredEventResponse> userRegisteredEventFlowable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(log -> getUserRegisteredEventFromLog(log));
+    }
+
+    public Flowable<UserRegisteredEventResponse> userRegisteredEventFlowable(
+            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
+        filter.addSingleTopic(EventEncoder.encode(USERREGISTERED_EVENT));
+        return userRegisteredEventFlowable(filter);
+    }
+
+    public RemoteFunctionCall<TransactionReceipt> buyEnergy(String producer, BigInteger amount,
+            BigInteger weiValue) {
+        final Function function = new Function(
+                FUNC_BUYENERGY, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, producer), 
+                new org.web3j.abi.datatypes.generated.Uint256(amount)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function, weiValue);
+    }
+
+    public RemoteFunctionCall<TransactionReceipt> consumeEnergy(BigInteger amount) {
+        final Function function = new Function(
+                FUNC_CONSUMEENERGY, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(amount)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<BigInteger> getUserPrice(String producer) {
+        final Function function = new Function(FUNC_GETUSERPRICE, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, producer)), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+        return executeRemoteCallSingleValueReturn(function, BigInteger.class);
+    }
+
+    public RemoteFunctionCall<TransactionReceipt> produceEnergy(BigInteger amount) {
+        final Function function = new Function(
+                FUNC_PRODUCEENERGY, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(amount)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<TransactionReceipt> registerUser(BigInteger pricePerToken) {
+        final Function function = new Function(
+                FUNC_registerUser, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(pricePerToken)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<TransactionReceipt> registerUser() {
+        final Function function = new Function(
+                FUNC_registerUser, 
+                Arrays.<Type>asList(), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<TransactionReceipt> setUserPrice(BigInteger newPricePerToken) {
+        final Function function = new Function(
+                FUNC_SETUSERPRICE, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(newPricePerToken)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    @Deprecated
+    public static EnergyMarket load(String contractAddress, Web3j web3j, Credentials credentials,
+            BigInteger gasPrice, BigInteger gasLimit) {
+        return new EnergyMarket(contractAddress, web3j, credentials, gasPrice, gasLimit);
+    }
+
+    @Deprecated
+    public static EnergyMarket load(String contractAddress, Web3j web3j,
+            TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return new EnergyMarket(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    }
+
+    public static EnergyMarket load(String contractAddress, Web3j web3j, Credentials credentials,
+            ContractGasProvider contractGasProvider) {
+        return new EnergyMarket(contractAddress, web3j, credentials, contractGasProvider);
+    }
+
+    public static EnergyMarket load(String contractAddress, Web3j web3j,
+            TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+        return new EnergyMarket(contractAddress, web3j, transactionManager, contractGasProvider);
+    }
+
+    public static RemoteCall<EnergyMarket> deploy(Web3j web3j, Credentials credentials,
+            ContractGasProvider contractGasProvider, String tokenAddress) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, tokenAddress)));
+        return deployRemoteCall(EnergyMarket.class, web3j, credentials, contractGasProvider, getDeploymentBinary(), encodedConstructor);
+    }
+
+    public static RemoteCall<EnergyMarket> deploy(Web3j web3j,
+            TransactionManager transactionManager, ContractGasProvider contractGasProvider,
+            String tokenAddress) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, tokenAddress)));
+        return deployRemoteCall(EnergyMarket.class, web3j, transactionManager, contractGasProvider, getDeploymentBinary(), encodedConstructor);
+    }
+
+    @Deprecated
+    public static RemoteCall<EnergyMarket> deploy(Web3j web3j, Credentials credentials,
+            BigInteger gasPrice, BigInteger gasLimit, String tokenAddress) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, tokenAddress)));
+        return deployRemoteCall(EnergyMarket.class, web3j, credentials, gasPrice, gasLimit, getDeploymentBinary(), encodedConstructor);
+    }
+
+    @Deprecated
+    public static RemoteCall<EnergyMarket> deploy(Web3j web3j,
+            TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit,
+            String tokenAddress) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, tokenAddress)));
+        return deployRemoteCall(EnergyMarket.class, web3j, transactionManager, gasPrice, gasLimit, getDeploymentBinary(), encodedConstructor);
+    }
+
+    public static void linkLibraries(List<Contract.LinkReference> references) {
+        librariesLinkedBinary = linkBinaryWithReferences(BINARY, references);
+    }
+
+    private static String getDeploymentBinary() {
+        if (librariesLinkedBinary != null) {
+            return librariesLinkedBinary;
+        } else {
+            return BINARY;
+        }
+    }
+
+    public static class EnergyConsumedEventResponse extends BaseEventResponse {
+        public String consumer;
+
+        public BigInteger amount;
+    }
+
+    public static class EnergyProducedEventResponse extends BaseEventResponse {
+        public String producer;
+
+        public BigInteger amount;
+    }
+
+    public static class EnergyPurchasedEventResponse extends BaseEventResponse {
+        public String consumer;
+
+        public String producer;
+
+        public BigInteger amount;
+
+        public BigInteger totalPrice;
+    }
+
+    public static class UserRegisteredEventResponse extends BaseEventResponse {
+        public String user;
+
+        public BigInteger pricePerToken;
+    }
+}
