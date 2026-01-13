@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.project.EnergyMarket.EnergyTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.702 s -- in com.project.EnergyMarket.EnergyTest
